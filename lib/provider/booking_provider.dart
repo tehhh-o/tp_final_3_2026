@@ -20,17 +20,3 @@ class BookingProvider extends ChangeNotifier {
     return _bookings.contains(booking);
   }
 }
-
-class BookingScope extends InheritedNotifier<BookingProvider> {
-  const BookingScope({
-    super.key,
-    required super.notifier,
-    required super.child,
-  });
-
-  static BookingProvider of(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<BookingScope>()!
-        .notifier!;
-  }
-}

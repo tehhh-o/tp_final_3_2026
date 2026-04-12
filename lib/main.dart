@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:s01_day3_am_project/home_page.dart';
 import 'package:s01_day3_am_project/provider/booking_provider.dart';
 
 void main() {
-  runApp(BookingScope(notifier: BookingProvider(), child: MyApp()));
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => BookingProvider(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

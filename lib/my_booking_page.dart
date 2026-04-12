@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:s01_day3_am_project/provider/booking_provider.dart';
 
 class MyBookingPage extends StatefulWidget {
@@ -11,7 +12,7 @@ class MyBookingPage extends StatefulWidget {
 class _MyBookingPageState extends State<MyBookingPage> {
   @override
   Widget build(BuildContext context) {
-    final bookings = BookingScope.of(context).bookings;
+    final bookings = context.watch<BookingProvider>().bookings;
     final ts = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(
@@ -102,15 +103,11 @@ class _MyBookingPageState extends State<MyBookingPage> {
                                 alignment: AlignmentGeometry.center,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    BookingScope.of(
-                                      context,
-                                    ).addBooking(booking);
-                                    Navigator.popUntil(
-                                      context,
-                                      (route) => route.isFirst,
-                                    );
+                                    context
+                                        .read<BookingProvider>()
+                                        .removeBooking(booking);
                                   },
-                                  child: Text('Back To Home'),
+                                  child: Text('Remove Booking.'),
                                 ),
                               ),
                             ],

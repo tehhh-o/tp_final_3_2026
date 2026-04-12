@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:s01_day3_am_project/module/booking.dart';
 import 'package:s01_day3_am_project/provider/booking_provider.dart';
 
@@ -83,7 +84,7 @@ class BookingConfirmPage extends StatelessWidget {
                       alignment: AlignmentGeometry.center,
                       child: ElevatedButton(
                         onPressed: () {
-                          BookingScope.of(context).addBooking(booking);
+                          context.read<BookingProvider>().addBooking(booking);
                           Navigator.popUntil(context, (route) => route.isFirst);
                         },
                         child: Text('Back To Home'),
