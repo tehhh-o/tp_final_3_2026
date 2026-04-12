@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Hari Raya Aidifitri",
+        "desc": "Date varies (Syawal) · Nationwide, focus on kampung & KL",
+        "img": "images/raya.jpg",
+        "info": "Hari Raya is a major Muslim festival celebrated after Ramadan. Families visit open houses, wear traditional clothes and enjoy traditional food.",
+        "package": [
+            {
+                "title": "Raya Open House Experience",
+                "desc": "Visit a local family, taste kuih raya and join a photoshoot.",
+                "basePrice": 60.00,
+                "perPerson": 40.00
+            },
+            {
+                "title": "Traditional Kuih Tasting Tour",
+                "desc": "Guidede tour to sample famous Raya kuih in KL.",
+                "basePrice": 60.00,
+                "perPerson": 30.00
+            }
+        ]
+    },
+    {
+        "name": "Chinese New Year",
+        "desc": "1st day of Chinese Lunar Year · Nationwide, focus on KL & Penang",
+        "img": "images/cny.jpg"
+    },
+    {
+        "name": "Deepavali",
+        "desc": "Date varies (Kartika) · `Nationwide, focus on Brickfields & major cities",
+        "img": "images/deepavali.jpg"
+    }
+]
