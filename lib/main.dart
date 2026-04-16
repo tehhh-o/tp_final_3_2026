@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
+import 'package:s01_day3_am_project/hive/hive_registrar.g.dart';
 import 'package:s01_day3_am_project/home_page.dart';
-import 'package:s01_day3_am_project/provider/booking_provider.dart';
+import 'package:s01_day3_am_project/module/booking.dart';
 
-void main() {
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => BookingProvider(),
-      child: MyApp(),
-    ),
-  );
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapters();
+  await Hive.openBox<Booking>('Bookings');
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

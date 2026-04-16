@@ -26,6 +26,7 @@ class _BookingFormPageState extends State<BookingFormPage> {
   bool addTransport = false;
   bool addMeal = false;
   bool isCalcTotal = false;
+  bool isSubmitting = false;
 
   double basePrice = 0,
       perPersonTotal = 0,
@@ -166,6 +167,7 @@ class _BookingFormPageState extends State<BookingFormPage> {
                             onChanged: (value) {
                               setState(() {
                                 addTransport = value;
+                                isCalcTotal ? calcTotal() : null;
                               });
                             },
                           ),
@@ -177,6 +179,7 @@ class _BookingFormPageState extends State<BookingFormPage> {
                             onChanged: (value) {
                               setState(() {
                                 addMeal = value;
+                                isCalcTotal ? calcTotal() : null;
                               });
                             },
                           ),
@@ -245,37 +248,43 @@ class _BookingFormPageState extends State<BookingFormPage> {
                               : SizedBox(),
 
                           ElevatedButton(
-                            onPressed: () {
-                              if (formkey.currentState!.validate() &&
-                                  isCalcTotal) {
-                                final Booking booking = Booking(
-                                  package: package,
-                                  name: nameC.text.trim(),
-                                  phoneEmail: phoneEmailC.text.trim(),
-                                  peopleAmountC: int.parse(
-                                    peopleAmountC.text.trim(),
-                                  ),
-                                  date: date!,
-                                  addTransport: addTransport,
-                                  addMeal: addMeal,
-                                  basePrice: basePrice,
-                                  perPersonTotal: perPersonTotal,
-                                  transportTotal: transportTotal,
-                                  mealTotal: mealTotal,
-                                  subTotal: subTotal,
-                                  discount: discount,
-                                  total: total,
-                                  event: widget.event,
-                                );
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        BookingConfirmPage(booking: booking),
-                                  ),
-                                );
-                              }
-                            },
+                            onPressed: isSubmitting
+                                ? null
+                                : () {
+                                    if (formkey.currentState!.validate() &&
+                                        isCalcTotal) {
+                                      isSubmitting = true;
+                                      final Booking booking = Booking(
+                                        package: package,
+                                        name: nameC.text.trim(),
+                                        phoneEmail: phoneEmailC.text.trim(),
+                                        peopleAmountC: int.parse(
+                                          peopleAmountC.text.trim(),
+                                        ),
+                                        date: date!,
+                                        addTransport: addTransport,
+                                        addMeal: addMeal,
+                                        basePrice: basePrice,
+                                        perPersonTotal: perPersonTotal,
+                                        transportTotal: transportTotal,
+                                        mealTotal: mealTotal,
+                                        subTotal: subTotal,
+                                        discount: discount,
+                                        total: total,
+                                        event: widget.event,
+                                      );
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              BookingConfirmPage(
+                                                booking: booking,
+                                              ),
+                                        ),
+                                      );
+                                      isSubmitting = false;
+                                    }
+                                  },
                             child: Text('Confirm Booking'),
                           ),
                         ],

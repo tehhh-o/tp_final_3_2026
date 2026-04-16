@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:s01_day3_am_project/provider/booking_provider.dart';
+import 'package:hive_ce/hive_ce.dart';
+import 'package:s01_day3_am_project/module/booking.dart';
 
 class MyBookingPage extends StatefulWidget {
   const MyBookingPage({super.key});
@@ -10,9 +10,10 @@ class MyBookingPage extends StatefulWidget {
 }
 
 class _MyBookingPageState extends State<MyBookingPage> {
+  final box = Hive.box<Booking>('Bookings');
   @override
   Widget build(BuildContext context) {
-    final bookings = context.watch<BookingProvider>().bookings;
+    final bookings = box.values.toList();
     final ts = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(
@@ -103,9 +104,9 @@ class _MyBookingPageState extends State<MyBookingPage> {
                                 alignment: AlignmentGeometry.center,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    context
-                                        .read<BookingProvider>()
-                                        .removeBooking(booking);
+                                    setState(() {
+                                      box.delete(box.keyAt(index));
+                                    });
                                   },
                                   child: Text('Remove Booking.'),
                                 ),
