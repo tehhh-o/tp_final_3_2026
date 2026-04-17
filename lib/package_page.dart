@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:s01_day3_am_project/booking_form_page.dart';
+import 'package:s01_day3_am_project/helper/route.dart';
 import 'package:s01_day3_am_project/module/event.dart';
 
 class PackagePage extends StatefulWidget {
@@ -75,8 +76,8 @@ class _PackagePageState extends State<PackagePage> {
                                 child: ElevatedButton(
                                   onPressed: () => Navigator.push(
                                     context,
-                                    MaterialPageRoute(
-                                      builder: (context) => BookingFormPage(
+                                    SlideFadeRoute(
+                                      page: BookingFormPage(
                                         package: package,
                                         event: event,
                                       ),

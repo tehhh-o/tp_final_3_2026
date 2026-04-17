@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:s01_day3_am_project/detail_page.dart';
+import 'package:s01_day3_am_project/helper/route.dart';
 import 'package:s01_day3_am_project/module/event.dart';
 import 'package:s01_day3_am_project/my_booking_page.dart';
 
@@ -39,10 +40,8 @@ class _HomePageState extends State<HomePage> {
         title: Text('FestivalQuest MY'),
         actions: [
           IconButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MyBookingPage()),
-            ),
+            onPressed: () =>
+                Navigator.push(context, SlideFadeRoute(page: MyBookingPage())),
             icon: Icon(Icons.calendar_month, color: Colors.black),
           ),
           IconButton(
@@ -96,7 +95,7 @@ class _HomePageState extends State<HomePage> {
                                       gradient: LinearGradient(
                                         colors: [
                                           Colors.transparent,
-                                          Colors.black.withAlpha(150),
+                                          Colors.black.withAlpha(180),
                                         ],
                                         begin: AlignmentGeometry.topCenter,
                                         end: AlignmentGeometry.bottomCenter,
@@ -140,9 +139,8 @@ class _HomePageState extends State<HomePage> {
                                     IconButton(
                                       onPressed: () => Navigator.push(
                                         context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              DetailPage(event: event),
+                                        SlideFadeRoute(
+                                          page: DetailPage(event: event),
                                         ),
                                       ),
                                       icon: Icon(Icons.keyboard_arrow_right),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:s01_day3_am_project/helper/route.dart';
 import 'package:s01_day3_am_project/module/event.dart';
 import 'package:s01_day3_am_project/package_page.dart';
 
@@ -54,9 +55,7 @@ class DetailPage extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () => Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => PackagePage(event: event),
-                      ),
+                      SlideFadeRoute(page: PackagePage(event: event)),
                     ),
                     child: Text('View Festival Package'),
                   ),

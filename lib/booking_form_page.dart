@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:s01_day3_am_project/booking_confirm_page.dart';
+import 'package:s01_day3_am_project/helper/route.dart';
+import 'package:s01_day3_am_project/helper/snackbar_helper.dart';
 import 'package:s01_day3_am_project/module/booking.dart';
 import 'package:s01_day3_am_project/module/event.dart';
+import 'package:s01_day3_am_project/widgets/animated_price_tag.dart';
+import 'package:s01_day3_am_project/widgets/custom_form_field.dart';
 
 class BookingFormPage extends StatefulWidget {
   final Event event;
@@ -48,6 +52,15 @@ class _BookingFormPageState extends State<BookingFormPage> {
     isCalcTotal = true;
   }
 
+  TableRow row(String label, double value) {
+    return TableRow(
+      children: [
+        Text("$label:"),
+        AnimatedPriceText(value: value),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final package = widget.package;
@@ -64,13 +77,14 @@ class _BookingFormPageState extends State<BookingFormPage> {
 
       body: Stack(
         children: [
-          Image.asset(
-            'images/bg.jpg',
-            height: double.infinity,
-            width: double.infinity,
-            fit: BoxFit.fill,
-            color: Colors.white.withAlpha(140),
-            colorBlendMode: BlendMode.lighten,
+          Opacity(
+            opacity: 0.15,
+            child: Image.asset(
+              'images/bg.jpg',
+              height: double.infinity,
+              width: double.infinity,
+              fit: BoxFit.fill,
+            ),
           ),
 
           Padding(
@@ -83,58 +97,36 @@ class _BookingFormPageState extends State<BookingFormPage> {
                       key: formkey,
                       child: Column(
                         children: [
-                          TextFormField(
-                            controller: nameC,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.person),
-                              hintText: 'Enter Your Name',
-                              labelText: 'Your Name',
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.always,
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your name';
-                              }
-                              return null;
-                            },
+                          CustomFormField(
+                            tController: nameC,
+                            hint: 'Full Name (as per ID)',
+                            label: 'Name',
+                            icon: Icons.person,
+                            errMsg: 'Please enter your name',
                           ),
-                          TextFormField(
-                            controller: phoneEmailC,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.phone),
-                              hintText: 'Enter Your Phone Number',
-                              labelText: 'Phone or Email',
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.always,
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your phone number';
-                              }
-                              return null;
-                            },
+                          CustomFormField(
+                            tController: phoneEmailC,
+                            hint: '011-12345678',
+                            label: 'Phone Number',
+                            icon: Icons.phone,
+                            errMsg: 'Please enter your phone number',
+                            inputType: TextInputType.phone,
                           ),
-                          TextFormField(
-                            controller: peopleAmountC,
-                            keyboardType: TextInputType.numberWithOptions(),
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.people),
-                              hintText: 'Enter the Amount of People',
-                              labelText: 'Number of People',
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.always,
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter the amounr of people';
-                              }
-                              return null;
-                            },
+                          CustomFormField(
+                            tController: peopleAmountC,
+                            hint: 'e.g. 3',
+                            label: 'Number of Guests',
+                            icon: Icons.people,
+                            errMsg: 'Please enter the number of guests',
+                            inputType: TextInputType.number,
                           ),
-                          TextFormField(
-                            controller: dateC,
-                            canRequestFocus: false,
+                          CustomFormField(
+                            tController: dateC,
+                            hint: 'Tap to select a date',
+                            label: 'Preferred Date',
+                            icon: Icons.calendar_month,
+                            errMsg: 'Please pick a preferred date',
+                            canFocus: false,
                             onTap: () async {
                               date = await showDatePicker(
                                 context: context,
@@ -146,19 +138,6 @@ class _BookingFormPageState extends State<BookingFormPage> {
                                   dateC.text = date.toString().split(' ')[0];
                                 });
                               }
-                            },
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.calendar_month),
-                              hintText: 'Pick a Date',
-                              labelText: 'Preferred Date',
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.always,
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please pick a date';
-                              }
-                              return null;
                             },
                           ),
                           SwitchListTile(
@@ -185,12 +164,19 @@ class _BookingFormPageState extends State<BookingFormPage> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 16.0),
-                            child: ElevatedButton(
+                            child: OutlinedButton(
                               onPressed: () {
                                 if (formkey.currentState!.validate()) {
                                   setState(() {
                                     calcTotal();
                                   });
+                                } else {
+                                  SnackbarHelper.show(
+                                    context: context,
+                                    message:
+                                        'Please fill in all the necessary fields.',
+                                    isError: true,
+                                  );
                                 }
                               },
                               child: Text('Calculate Price'),
@@ -209,25 +195,18 @@ class _BookingFormPageState extends State<BookingFormPage> {
                                           'Price Breakdown',
                                           style: ts.titleMedium,
                                         ),
-                                        Text(
-                                          'Base Price : RM ${basePrice.toStringAsFixed(2)}',
-                                          style: ts.titleSmall,
-                                        ),
-                                        Text(
-                                          'Per Person Total : RM ${perPersonTotal.toStringAsFixed(2)}',
-                                          style: ts.titleSmall,
-                                        ),
-                                        Text(
-                                          'Transport : RM ${transportTotal.toStringAsFixed(2)}',
-                                          style: ts.titleSmall,
-                                        ),
-                                        Text(
-                                          'Meals : RM ${mealTotal.toStringAsFixed(2)}',
-                                          style: ts.titleSmall,
-                                        ),
-                                        Text(
-                                          'Discount : RM ${discount.toStringAsFixed(2)}',
-                                          style: ts.titleSmall,
+                                        Table(
+                                          columnWidths: const {
+                                            0: FlexColumnWidth(),
+                                            1: FixedColumnWidth(80),
+                                          },
+                                          children: [
+                                            row('Base Price', basePrice),
+                                            row('Per Person', perPersonTotal),
+                                            row('Transport', transportTotal),
+                                            row('Meals', mealTotal),
+                                            row('Discount', discount),
+                                          ],
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
@@ -238,8 +217,27 @@ class _BookingFormPageState extends State<BookingFormPage> {
                                             height: 2,
                                           ),
                                         ),
-                                        Text(
-                                          'Total: RM${total.toStringAsFixed(2)}',
+                                        Row(
+                                          children: [
+                                            Text(
+                                              'Total: ',
+                                              style: ts.titleMedium?.copyWith(
+                                                color: Theme.of(
+                                                  context,
+                                                ).primaryColor,
+                                                fontSize: 18,
+                                              ),
+                                            ),
+                                            AnimatedPriceText(
+                                              value: total,
+                                              style: ts.titleMedium?.copyWith(
+                                                color: Theme.of(
+                                                  context,
+                                                ).primaryColor,
+                                                fontSize: 18,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
@@ -273,16 +271,34 @@ class _BookingFormPageState extends State<BookingFormPage> {
                                         total: total,
                                         event: widget.event,
                                       );
+                                      SnackbarHelper.show(
+                                        context: context,
+                                        message: 'Booking Created Sucessfully',
+                                      );
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              BookingConfirmPage(
-                                                booking: booking,
-                                              ),
+                                        SlideFadeRoute(
+                                          page: BookingConfirmPage(
+                                            booking: booking,
+                                          ),
                                         ),
                                       );
                                       isSubmitting = false;
+                                    } else if (!formkey.currentState!
+                                        .validate()) {
+                                      SnackbarHelper.show(
+                                        context: context,
+                                        message:
+                                            'Please fill in all the necessary fields.',
+                                        isError: true,
+                                      );
+                                    } else {
+                                      SnackbarHelper.show(
+                                        context: context,
+                                        message:
+                                            'Please calculate the price first.',
+                                        isError: true,
+                                      );
                                     }
                                   },
                             child: Text('Confirm Booking'),

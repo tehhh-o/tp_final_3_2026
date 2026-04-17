@@ -35,9 +35,17 @@ class MyApp extends StatelessWidget {
           bodyMedium: TextStyle(fontSize: 14),
           bodySmall: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
         ),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 241, 53, 116),
+        cardTheme: CardThemeData(
+          elevation: 2,
+          color: const Color.fromARGB(255, 254, 245, 248),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadiusGeometry.circular(16),
+          ),
         ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(elevation: 1.5),
+        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
       ),
       home: const HomePage(),
     );

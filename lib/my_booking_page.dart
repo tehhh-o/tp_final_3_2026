@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_ce/hive_ce.dart';
+import 'package:s01_day3_am_project/helper/snackbar_helper.dart';
 import 'package:s01_day3_am_project/module/booking.dart';
 
 class MyBookingPage extends StatefulWidget {
@@ -11,6 +12,11 @@ class MyBookingPage extends StatefulWidget {
 
 class _MyBookingPageState extends State<MyBookingPage> {
   final box = Hive.box<Booking>('Bookings');
+
+  TableRow row(String label, String value) {
+    return TableRow(children: [Text("$label:"), Text(value)]);
+  }
+
   @override
   Widget build(BuildContext context) {
     final bookings = box.values.toList();
@@ -26,13 +32,14 @@ class _MyBookingPageState extends State<MyBookingPage> {
 
       body: Stack(
         children: [
-          Image.asset(
-            'images/bg.jpg',
-            height: double.infinity,
-            width: double.infinity,
-            fit: BoxFit.fill,
-            color: Colors.white.withAlpha(140),
-            colorBlendMode: BlendMode.lighten,
+          Opacity(
+            opacity: 0.15,
+            child: Image.asset(
+              'images/bg.jpg',
+              height: double.infinity,
+              width: double.infinity,
+              fit: BoxFit.fill,
+            ),
           ),
 
           Padding(
@@ -51,42 +58,70 @@ class _MyBookingPageState extends State<MyBookingPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(booking.event.name, style: ts.titleMedium),
-                              Text(booking.package.title, style: ts.bodyLarge),
+                              Text(
+                                booking.event.name,
+                                style: ts.titleMedium?.copyWith(fontSize: 28),
+                              ),
+                              Text(
+                                booking.package.title,
+                                style: ts.bodyLarge?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 18,
+                                ),
+                              ),
                               SizedBox(height: 8),
-                              Text('Name: ${booking.name}'),
-                              Text('Contact: ${booking.phoneEmail}'),
-                              Text(
-                                'Date: ${booking.date.toString().split('')[0]}',
+                              Table(
+                                columnWidths: const {
+                                  0: FlexColumnWidth(),
+                                  1: FixedColumnWidth(80),
+                                },
+                                children: [
+                                  row('Name', booking.name),
+                                  row('Contact', booking.phoneEmail),
+                                  row(
+                                    'Date',
+                                    booking.date.toString().split(' ')[0],
+                                  ),
+                                  row(
+                                    'People',
+                                    booking.peopleAmountC.toString(),
+                                  ),
+                                  row(
+                                    'Transport',
+                                    booking.addTransport ? 'Yes' : 'No',
+                                  ),
+                                  row('Meal', booking.addMeal ? 'Yes' : 'No'),
+                                ],
                               ),
-                              Text(
-                                'People: ${booking.peopleAmountC.toString()}',
-                              ),
-                              Text(
-                                'Transport: ${booking.addTransport ? 'Yes' : 'No'}',
-                              ),
-                              Text('Meal: ${booking.addMeal ? 'Yes' : 'No'}'),
                               SizedBox(height: 16),
                               Text('Price Breakdown', style: ts.titleMedium),
-                              Text(
-                                'Base Price : RM ${booking.basePrice.toStringAsFixed(2)}',
-                                style: ts.bodyMedium,
-                              ),
-                              Text(
-                                'Per Person Total : RM ${booking.perPersonTotal.toStringAsFixed(2)}',
-                                style: ts.bodyMedium,
-                              ),
-                              Text(
-                                'Transport : RM ${booking.transportTotal.toStringAsFixed(2)}',
-                                style: ts.bodyMedium,
-                              ),
-                              Text(
-                                'Meals : RM ${booking.mealTotal.toStringAsFixed(2)}',
-                                style: ts.bodyMedium,
-                              ),
-                              Text(
-                                'Discount : RM ${booking.discount.toStringAsFixed(2)}',
-                                style: ts.bodyMedium,
+                              Table(
+                                columnWidths: const {
+                                  0: FlexColumnWidth(),
+                                  1: FixedColumnWidth(80),
+                                },
+                                children: [
+                                  row(
+                                    'Base Price',
+                                    'RM ${booking.basePrice.toStringAsFixed(2)}',
+                                  ),
+                                  row(
+                                    'Per Person',
+                                    'RM ${booking.perPersonTotal.toStringAsFixed(2)}',
+                                  ),
+                                  row(
+                                    'Transport',
+                                    'RM ${booking.transportTotal.toStringAsFixed(2)}',
+                                  ),
+                                  row(
+                                    'Meals',
+                                    'RM ${booking.mealTotal.toStringAsFixed(2)}',
+                                  ),
+                                  row(
+                                    'Discount',
+                                    'RM ${booking.discount.toStringAsFixed(2)}',
+                                  ),
+                                ],
                               ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -96,7 +131,11 @@ class _MyBookingPageState extends State<MyBookingPage> {
                               ),
                               Text(
                                 'Total: RM${booking.total.toStringAsFixed(2)}',
-                                style: ts.titleMedium,
+                                style: ts.titleMedium?.copyWith(
+                                  color: Theme.of(context).primaryColor,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w900,
+                                ),
                               ),
 
                               SizedBox(height: 20),
@@ -106,6 +145,10 @@ class _MyBookingPageState extends State<MyBookingPage> {
                                   onPressed: () {
                                     setState(() {
                                       box.delete(box.keyAt(index));
+                                      SnackbarHelper.show(
+                                        context: context,
+                                        message: 'Booking Removed Sucessfully',
+                                      );
                                     });
                                   },
                                   child: Text('Remove Booking.'),
